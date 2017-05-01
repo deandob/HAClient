@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test Flow Widget</title>
+</head>
+<body id="body">
+    <style>
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            src: local('Open Sans'), local('OpenSans'), url('../fonts/OpenSans700.woff') format('woff');
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .yellow {
+            border: 2px solid #fbeed5;
+            /*background-color: #fcf8e3;*/
+            background-color: #fffaf3;
+            color: #c09853;
+        }
+
+        .white {
+            border: 2px solid #e3e3e3;
+            background-color: #ffffff;
+            color: #999;
+        }
+
+        .grey {
+            border: 2px solid #999;
+            background-color: #e3e3e3;
+            color: #999;
+        }
+
+        .grey:hover {
+            cursor: crosshair
+        }
+
+        .blue {
+            border: 2px solid #bce8f1;
+            background-color: #d9edf7;
+            color: #3a87ad;
+        }
+
+        .red {
+            border: 2px solid #eed3d7;
+            background-color: #f2dede;
+            color: #b94a48;
+        }
+
+        .green {
+            border: 2px solid #b6c9a6;
+            background-color: #dff0d8;
+            color: #468847;
+        }
+    </style>
+
+    <span id="type" data-default="if" />
+    <span id="TBtooltip" data-default="If-Then-Else node" />
+    <span id="attrib0" data-type="dropdown" data-name="equal, greater, less, not equal, contains, like, changed" data-default="equal" />
+    <span id="attrib1" data-type="input" data-name="Value" data-default="" />
+    <span id="attrib2" data-type="data" data-default="If" />
+    <span id="ontop" data-default="true" />
+
+    <div id="group">
+        <div id="widget" style="position: absolute; left: 0px; top: 0px; width: 100px; height: 100px; text-align: center">
+            <div class="green" style="position: absolute; left: 15px; top: 15px; height: 60px; width: 60px; border-radius: 3px 3px 3px 3px; transform: rotate(45deg)"></div>
+<!--            <div class="green" style="position: absolute; left: 00px; top: 0; width: 0; height: 0; border-top: 50px solid transparent; border-right: 50px solid red; border-bottom: 50px solid transparent;"></div>
+            <div class="green" style="position: absolute; left: 50px; top: 0; width: 0; height: 0; border-top: 50px solid transparent; border-left: 50px solid red; border-bottom: 50px solid transparent;"></div>
+            <svg>
+                <path
+            </svg>
+-->
+            <div id="header" style="position: absolute; width: 90px; height: 90px; display:flex; align-items: center; justify-content: center; color: #468847">If</div>
+            <div id="inPin0" class="grey" onmouseover="colorPin(this, 'enter')" onmouseout="colorPin(this, 'exit')" onclick="connectLink(this, 'inPin', 0)" style="position: absolute; left: 0px; top: 42px; border-radius: 1px; width:6px; height:6px"></div>
+            <div id="outPin0" class="grey" onmouseover="colorPin(this, 'enter')" onmouseout="colorPin(this, 'exit')" onclick="connectLink(this, 'outPin', 0)" style="position: absolute; left: 63px; top: 21px; border-radius: 4px; width:6px; height:6px"></div>
+            <div id="outPin1" class="grey" onmouseover="colorPin(this, 'enter')" onmouseout="colorPin(this, 'exit')" onclick="connectLink(this, 'outPin', 1)" style="position: absolute; left: 63px; top: 63px; border-radius: 4px; width:6px; height:6px"></div>
+
+        </div>
+    </div>
+
+    <script>
+
+        // Initialize widget framework API
+        var fw;
+        function widgetLoad(myName) {
+            fw = new parent.widgetAPI(myName);                                  // widget framework object
+        }
+
+        var header = document.getElementById("header")
+        var outPin = document.getElementById("outPin");
+        var inPin = document.getElementById("inPin");
+
+        // Widget specific startup actions for dashboard. Return "OK" if startup OK else return an error string
+        function dashStart(mode) {
+            //header.innerText = fw.attribs[3].value;
+            //fw.widgetID.className = fw.attribs[2].value
+            //header.className = fw.widgetID.className
+            return "OK";
+        }
+
+        // Widget specific startup actions when first created by dropping in design mode. Return "OK" if startup OK else return an error string
+        function newWidget(mode) {
+            return "OK";
+        }
+
+        // Widget specific startup actions for toolbox. Return "OK" if startup OK else return an error string
+        function toolStart(mode) {
+            return "OK"
+        }
+
+        function startEdit() {              // called when editing started
+            //document.body.setAttribute("spellcheck", "true");
+            return -1;                          // -1 to cancel edit
+        }
+
+        function endEdit(param0) {                // called when editing finishes
+            //document.body.setAttribute("spellcheck", "false");
+            //fw.func("setAttrib", 2, header.textContent)
+            //dashStart()
+        }
+
+        function startDesign() {            // called when switching to design mode
+            header.contentEditable = "true"
+        }
+
+        function scale(scaleX, scaleY) {    // manage scaling
+            fw.widgetID.style.setProperty("width", (fw.iniWidth * scaleX - 10) + "px");
+            fw.widgetID.style.setProperty("height", (fw.iniHeight * scaleY - 10) + "px");
+        }
+
+        function connectLink(me, type, pinNum) {
+            fw.func("endedit");
+            //fw.func("connectlink", type, me.offsetLeft, me.offsetHeight, pinNum);
+            fw.func("connectlink", type, parseInt(me.style.getPropertyValue("left")) + 5, parseInt(me.style.getPropertyValue("top")) + 5, pinNum);
+        }
+
+        function colorPin(me, enterexit) {
+            color = "rgb(51, 122, 183)"
+            if (enterexit == "exit") color = "#e3e3e3"
+            me.style.setProperty("background-color", color)
+        }
+
+    </script>
+</body>
+</html>
